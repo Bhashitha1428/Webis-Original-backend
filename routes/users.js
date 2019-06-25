@@ -32,7 +32,7 @@ router.post('/authenticate', (req, res, next)=> {
     const email= req.body.email;
     const password = req.body.password;
 
-    userController.getUserByUsername(email, (err, user) => {
+    userController.getUserByEmail(email, (err, user) => {
         if(err) throw err;
         if(!user){
             return res.json({success: false, msg: 'User not found'});
@@ -53,9 +53,10 @@ router.post('/authenticate', (req, res, next)=> {
                   token: 'JWT '+token,
                   user: {
                       id: user._id,
-                      name: user.name,
-                      username: user.username,
-                      email: user.email
+                      name: user.fname,
+                      role: user.role,
+                      email: user.email,
+                      
                   }
               });
           }else{
