@@ -11,7 +11,7 @@ const userController=require('../Controllers/userController');
 
 //register
 router.post('/register', (req,res,next)=> {
-    console.log("AAAAAAAAA")
+    console.log("bbbbbbbbbbb")
     let newUser = new User({
         fname: req.body.fname,
         lname:req.body.lname,
