@@ -8,7 +8,7 @@ const userController=require('../Controllers/userController');
 
 //register
 router.post('/register', (req,res,next)=> {
-    console.log("AAAAAAAAAA")
+    console.log(req.body)
     let newUser = new User({
         fname: req.body.fname,
         lname:req.body.lname,
