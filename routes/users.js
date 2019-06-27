@@ -4,7 +4,10 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config/database');
 const User = require('../models/user');
-const userController=require('../Controllers/userController')
+const userController=require('../Controllers/userController');
+
+
+
 
 //register
 router.post('/register', (req,res,next)=> {
@@ -41,16 +44,18 @@ router.post('/authenticate', (req, res, next)=> {
         userController.comparePassword(password, user.password, (err, isMatch) => {
           if(err) throw err;
           if(isMatch){
-              const token = jwt.sign({name: user}, config.secret, {
-                  expiresIn: 604800 // 1 week
+              const token = jwt.sign({user: user},config.secret, {
+                  expiresIn: 604800 // 1 week 
                 
               }
               );
               console.log(token);
-
+              
+             // res.header('x-auth-token',token);
               res.json({
                   success: true,
-                  token: 'JWT '+token,
+                  //token: 'JWT '+token,
+                  token: token,
                   user: {
                       id: user._id,
                       name: user.fname,

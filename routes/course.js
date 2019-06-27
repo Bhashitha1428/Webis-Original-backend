@@ -2,6 +2,8 @@ const express=require('express');
 const router=express.Router();
 const courseSchema=require('../models/course');
 
+const checkAuth=require('../middlewares/check-auth');
+
 //custom middleware
 //const auth=require('../middlewares/auth');
 //const authrole=require('../middlewares/authrole');
@@ -84,16 +86,18 @@ router.post('/store',upload.single('courseImg'), (req,res)=>{
     newCourse.description=req.body.description;
 
     newCourse.url=req.body.url;
-
-
-  // newCourse.courseImg=req.file.path;
+    newCourse.courseImg=req.file.path;
     newCourse.registerUser=req.body.objectId;
+
+
+
     newCourse.save()
     .then(result=>{
         res.json(result)
         console.log(result);
     })
     .catch(err=>{
+      
         res.json(err);
     })
 
@@ -151,14 +155,14 @@ router.put('/update/:id', async (req, res) => {
     
     // res.send(course);
 
-
+  
 
   });
 
 
   // delete existing course
   //[auth,authrole]
-  router.delete('/delete/:id', async (req, res) => {
+  router.delete('/delete/:id',checkAuth.checkIfContentProvider, async (req, res) => {
     console.log("IN course delete Route");
     const course = await courseSchema.findByIdAndRemove(req.params.id);
   

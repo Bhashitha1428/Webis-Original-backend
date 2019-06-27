@@ -8,6 +8,14 @@ const mongoose = require('mongoose');
 const config = require('./config/database');
 
 
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://admin:123@cluster0-jenls.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
 
 
  ////////////////////////////
@@ -27,13 +35,13 @@ const config = require('./config/database');
 
 
 //connect to database
-mongoose.connect(config.database);
+// mongoose.connect(config.database);
 
 
 //on connection
-mongoose.connection.on('connected', () => { 
-  console.log('connected to database '+config.database)
-});
+// mongoose.connection.on('connected', () => { 
+//   console.log('connected to database '+config.database)
+// });
 
 //on error
 mongoose.connection.on('error', (err) => { 
