@@ -6,22 +6,38 @@ const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const config = require('./config/database');
+const http = require('http');
+
+const usersRoutes = require('./routes/users');
+const courseRoutes = require('./routes/course');
+
+//port num
+const port = 3000;
+
+//start server
+const server = http.createServer(app);
+
+// server.listen(port);
+server.listen(port, () =>{
+   console.log('server started on port '+port);
+});
+
+//connect to database
+mongoose.connect(config.database);
 
 
-// const MongoClient = require('mongodb').MongoClient;
-// const uri = "mongodb+srv://admin:123@cluster0-jenls.mongodb.net/test?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { useNewUrlParser: true });
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   client.close();
-// });
+//on connection
+mongoose.connection.on('connected', () => { 
+  console.log('connected to database '+config.database)
+});
 
-mongoose.connect("mongodb+srv://admin:123@cluster0-jenls.mongodb.net/test?retryWrites=true&w=majority");
-
+//on error
+mongoose.connection.on('error', (err) => { 
+  console.log('database error '+err)
+});
 
  ////////////////////////////
- app.use((req, res, next)=>{
+app.use((req, res, next)=>{
   res.header("Access-Control-Allow-Origin","*");
   res.header(
       "Access-Control-Allow-Headers",
@@ -36,27 +52,6 @@ mongoose.connect("mongodb+srv://admin:123@cluster0-jenls.mongodb.net/test?retryW
 /////////////////////////
 
 
-//connect to database
-// mongoose.connect(config.database);
-
-
-//on connection
-// mongoose.connection.on('connected', () => { 
-//   console.log('connected to database '+config.database)
-// });
-
-//on error
-mongoose.connection.on('error', (err) => { 
-    console.log('database error '+err)
-  });
-
-
-
-
-
-
-//port num
-// const port = 3000;
 
 //cors middleware
 app.use(cors());
@@ -74,23 +69,29 @@ app.use(passport.session());
 require('./config/passport')(passport);
 
 
-//start server
-// app.listen(port, () =>{
-//    console.log('server started on port '+port);
-// });
-
 
 //index route
-app.get('/', (req,res) =>{
-    console.log("index")
-    res.send('invalid Endpoint');
+app.get('/', (req, res, next) =>{
+  console.log("index");
+  res.send('invalid Endpoint');
 });
-
-
-
-
-const usersRoutes = require('./routes/users');
-const courseRoutes = require('./routes/course');
 
 app.use('/users',usersRoutes);
 app.use('/course',courseRoutes);
+
+app.use((req, res, next)=>{
+  const error = new Error('Not Found');
+  error.status(404);
+  next(error);
+});
+
+app.use((error, req, res, next)=>{ 
+  res.status(error.status || 500);
+  res.json({ 
+      error: {
+          message: error.message
+      }
+  });
+}); 
+
+module.exports = app;
