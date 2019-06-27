@@ -8,14 +8,16 @@ const mongoose = require('mongoose');
 const config = require('./config/database');
 
 
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://admin:123@cluster0-jenls.mongodb.net/test?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
-});
+// const MongoClient = require('mongodb').MongoClient;
+// const uri = "mongodb+srv://admin:123@cluster0-jenls.mongodb.net/test?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true });
+// client.connect(err => {
+//   const collection = client.db("test").collection("devices");
+//   // perform actions on the collection object
+//   client.close();
+// });
+
+mongoose.connect("mongodb+srv://admin:123@cluster0-jenls.mongodb.net/test?retryWrites=true&w=majority");
 
 
  ////////////////////////////
@@ -54,7 +56,7 @@ mongoose.connection.on('error', (err) => {
 
 
 //port num
-const port = 3000;
+// const port = 3000;
 
 //cors middleware
 app.use(cors());
@@ -72,16 +74,19 @@ app.use(passport.session());
 require('./config/passport')(passport);
 
 
+//start server
+// app.listen(port, () =>{
+//    console.log('server started on port '+port);
+// });
+
 
 //index route
 app.get('/', (req,res) =>{
+    console.log("index")
     res.send('invalid Endpoint');
 });
 
-//start server
-app.listen(port, () =>{
-   console.log('server started on port '+port);
-});
+
 
 
 const usersRoutes = require('./routes/users');
