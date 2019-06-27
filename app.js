@@ -12,7 +12,7 @@ const usersRoutes = require('./routes/users');
 const courseRoutes = require('./routes/course');
 
 //port num
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 //start server
 const server = http.createServer(app);
