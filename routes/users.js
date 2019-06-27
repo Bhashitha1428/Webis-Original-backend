@@ -6,12 +6,9 @@ const config = require('../config/database');
 const User = require('../models/user');
 const userController=require('../Controllers/userController');
 
-
-
-
 //register
 router.post('/register', (req,res,next)=> {
-    console.log("bbbbbbbbbbb")
+    console.log("AAAAAAAAAA")
     let newUser = new User({
         fname: req.body.fname,
         lname:req.body.lname,
