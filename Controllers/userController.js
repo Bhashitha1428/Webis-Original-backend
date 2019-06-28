@@ -64,12 +64,12 @@ function getUserById (id, callback){
                      newUser.save()
                         .then(result => {
                             console.log("User signed up"); 
-                                res.status(201).json({
-                                state: true,
-                                exist: false,
-                                Message:"User Register Sucessful",
+                            //     res.status(201).json({
+                            //     state: true,
+                            //     exist: false,
+                            //     Message:"User Register Sucessful",
                             
-                            });
+                            // });
                             res.send("OKKKKKKKKKKKKKKKK")
                         })
                         .catch(err => {
