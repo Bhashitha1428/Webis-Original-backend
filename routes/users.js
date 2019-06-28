@@ -6,25 +6,11 @@ const config = require('../config/database');
 const User = require('../models/user');
 const userController=require('../Controllers/userController');
 
-//register
-router.post('/register', (req,res,next)=> {
-    console.log(req.body)
-    let newUser = new User({
-        fname: req.body.fname,
-        lname:req.body.lname,
-        email: req.body.email,
-        role: req.body.role,
-        password: req.body.password
-    });
-    console.log(newUser);
-    userController.addUser(newUser, (err, user) =>{
-        if(err){
-            res.json({success: false, msg: 'Failde to register user'});
-        }else{
-            res.json({success: true, msg: 'user registered'});
-        }
-    });
-});
+
+
+
+//Register User
+router.post('/register', userController.registerUser);
 
 //Authenticate
 router.post('/authenticate', (req, res, next)=> {
