@@ -34,7 +34,7 @@ router.post('/authenticate', (req, res, next)=> {
               );
               console.log(token);
               
-              res.header('x-auth-token',token);
+              //res.header('x-auth-token',token);
               res.json({
                   success: true,
                   //token: 'JWT '+token,

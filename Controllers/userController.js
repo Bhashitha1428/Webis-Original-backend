@@ -70,6 +70,7 @@ function getUserById (id, callback){
                                 Message:"User Register Sucessful",
                             
                             });
+                            res.send("OKKKKKKKKKKKKKKKK")
                         })
                         .catch(err => {
                             console.log(err);
