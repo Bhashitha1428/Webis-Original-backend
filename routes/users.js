@@ -9,7 +9,7 @@ const userController=require('../Controllers/userController');
 
 
 
-//Register User
+//Register User 
 router.post('/register', userController.registerUser);
 
 //Authenticate
@@ -34,7 +34,7 @@ router.post('/authenticate', (req, res, next)=> {
               );
               console.log(token);
               
-             // res.header('x-auth-token',token);
+              res.header('x-auth-token',token);
               res.json({
                   success: true,
                   //token: 'JWT '+token,
