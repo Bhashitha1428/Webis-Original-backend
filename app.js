@@ -8,8 +8,14 @@ const mongoose = require('mongoose');
 const config = require('./config/database');
 const http = require('http');
 
+
+
+
 const usersRoutes = require('./routes/users');
 const courseRoutes = require('./routes/course');
+const catergoryRoutes=require('./routes/catergory');
+const subCatergoryRoutes=require('./routes/subCatergory');
+
 
 //port num
 const port = process.env.PORT || 3000;
@@ -78,6 +84,8 @@ app.get('/', (req, res, next) =>{
 
 app.use('/users',usersRoutes);
 app.use('/course',courseRoutes);
+app.use('/subCatergory',subCatergoryRoutes);
+//app.use('/catergory',catergoryRoutes);
 
 app.use((req, res, next)=>{
   const error = new Error('Not Found');

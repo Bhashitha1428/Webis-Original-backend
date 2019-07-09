@@ -1,14 +1,16 @@
 const mongoose=require('mongoose');
-//const user=require('./user');
 
-const courseSchema=new mongoose.Schema({
 
-  name:{ type:String,},
-  author:{type:String,},
+const courseSchema= mongoose.Schema({
+ 
+  name:{ type:String},
+  author:{type:String},
   duration:{type:Number},
   content:{type:Array},
   description:{type:String},
   courseImg:{type:String},
+  catergory:{type:String},
+  subCatergory:{type:String},
 
   url:{type:String},
 
@@ -16,9 +18,15 @@ const courseSchema=new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:'user'
 }],
-
-
 });
 
 
-module.exports=mongoose.model('course',courseSchema);
+
+
+
+
+
+module.exports={
+  course:mongoose.model('course',courseSchema),
+  
+}

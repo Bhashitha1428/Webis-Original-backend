@@ -12,6 +12,23 @@ function getUserById (id, callback){
     User.findOne(query, callback);
 }
 
+
+// function getUserByEmail (email){
+//     console.log("zjhczdkh");
+//     const query = {email:email}
+//     User
+//     .findOne(query)
+//     .then(user=>{
+//         console.log(user);
+//         return user;
+        
+//     })
+//     .catch(err=>{
+//         console.log("Error"+err);
+//     })
+// }
+
+
 // module.exports.addUser = function(newUser, callback){
     
    
@@ -64,13 +81,13 @@ function getUserById (id, callback){
                      newUser.save()
                         .then(result => {
                             console.log("User signed up"); 
-                            //     res.status(201).json({
-                            //     state: true,
-                            //     exist: false,
-                            //     Message:"User Register Sucessful",
+                                res.status(201).json({
+                                state: true,
+                                exist: false,
+                                Message:"User Register Sucessful",
                             
-                            // });
-                            res.send("OKKKKKKKKKKKKKKKK")
+                            });
+                           
                         })
                         .catch(err => {
                             console.log(err);
@@ -94,9 +111,43 @@ function getUserById (id, callback){
     })
 
     }
+
+
+
+
+
+    //check if user is exist
+function checkUserIfExist(req, res, next){
+    const userId = req.params.userId;
+    User
+        .find({ _id: userId })
+        .exec()
+        .then(user => {
+            if(!user){
+                res.status(500).json({
+                    state: false
+                })
+            } else{
+                next()
+            }
+        })
+        .catch(err => {
+            res.status(500).json({
+                state: false,
+                Message: "User Not Exist"
+            })
+        })
+}
+
+
+
+
+
     module.exports={
         registerUser:registerUser,
         getUserByEmail:getUserByEmail,
         comparePassword:comparePassword,
-        getUserById:getUserById
+        getUserById:getUserById,
+        checkUserIfExist:checkUserIfExist,
+        
     }

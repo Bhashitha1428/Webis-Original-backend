@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const config = require('../config/database');
 
+
 //user schema
 
 const UserSchema = mongoose.Schema({
@@ -22,7 +23,13 @@ const UserSchema = mongoose.Schema({
         required: true
     },
     role: { type: String },
+    imageURL: { type: String },
+    registerCourse:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'course'
+    }],
+
 });
 
-const User = module.exports = mongoose.model('User', UserSchema);
+const User = module.exports = mongoose.model('user', UserSchema);
 
