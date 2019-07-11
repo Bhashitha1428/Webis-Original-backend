@@ -1,12 +1,13 @@
 
 const express = require('express');
 const router = express.Router();
-const catergory=require('../models/subCatergory');
+const catergory=require('../models/catergory');
 
 // add subCatergory
-router.post('/addSubCatergory',(req,res,next)=>{
+router.post('/addCatergory',(req,res,next)=>{
 
     const CName=req.body.catergoryName
+    console.log(CName)
        catergory
               .findOne({name:CName})//findone return one object so it check using if block
                                          //if we use find it return array of objects so it can not check whether ia empty using if block
@@ -20,8 +21,9 @@ router.post('/addSubCatergory',(req,res,next)=>{
 
                   }
                   else{
+                      
                  
-                    const newCatergory=new subCatergory({
+                    const newCatergory=new catergory({
                     name:req.body.catergoryName,
                 })
             newCatergory

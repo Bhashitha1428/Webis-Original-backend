@@ -85,7 +85,7 @@ app.get('/', (req, res, next) =>{
 app.use('/users',usersRoutes);
 app.use('/course',courseRoutes);
 app.use('/subCatergory',subCatergoryRoutes);
-//app.use('/catergory',catergoryRoutes);
+app.use('/catergory',catergoryRoutes);
 
 app.use((req, res, next)=>{
   const error = new Error('Not Found');
