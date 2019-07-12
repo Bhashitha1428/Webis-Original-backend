@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const catergory=require('../models/catergory');
 
-// add subCatergory
+// add Catergory
 router.post('/addCatergory',(req,res,next)=>{
 
     const CName=req.body.catergoryName
@@ -59,7 +59,7 @@ router.post('/addCatergory',(req,res,next)=>{
 })
 
 
-//get subCatergory
+//get Catergory
 
 router.get('/display',(req,res)=>{
   

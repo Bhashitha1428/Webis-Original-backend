@@ -77,6 +77,24 @@ router.get('/display',(req,res)=>{
  
  })
 
+ //get subCatergory according to particular catergory
+
+router.get('/display/:catergory',(req,res)=>{
+    const cat=req.params.catergory;
+    subCatergory.find({catergoryName:cat})
+    .exec()
+    .then(result=>{
+         console.log(result);
+         res.json(result)
+     })
+     .catch(err=>{
+         console.log("Sub Catergories detail retriving error:"+err);
+     })
+ 
+   
+ 
+ 
+ })
 
  //delete sub Catergory
 
