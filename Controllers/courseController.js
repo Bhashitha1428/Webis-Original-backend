@@ -1,3 +1,6 @@
+const jwt = require('jsonwebtoken');
+const config = require('../config/database');
+
 const Course=require('../models/course');
 const CourseSchema=Course.course;
 
@@ -5,13 +8,15 @@ function decode(req, res, next){
     //const token = req.headers.authorization.split(" ")[1];
    
     const token=req.header('x-auth-token');
-   // console.log(token)
+    //console.log(token)
+   
     const decodeJWT = jwt.verify(token,config.secret);
-
-    console.log(decodeJWT.user.role);
-  
+ 
     
-    return decodeJWT.user._id;
+    console.log(decodeJWT.user._id)
+   
+   // return dedecodeJWT;
+   return decodeJWT.user._id;
 
 
     
@@ -20,16 +25,25 @@ function decode(req, res, next){
 
 
 function checkUserAlreadyRegisterd(req,res,next){
-    console.log("BBBBBBBBBBB")
+    console.log("BBBBBBBBBBB");
+    console.log(req.body.courseId);
     try {
         const decodeUserID = decode(req, res, next);
-        console.log(decodeUserID)
-        console.log("BBBBBBBBBBB")
-         CourseSchema.find({reregisterUser:decodeUserID})
+        console.log(decodeUserID);
+        
+         CourseSchema.find({_id:req.body.courseId,registerUser:decodeUserID})
+    .populate("registerUser")
+
          .then(user=>{
-             if(user)
+             console.log(user);
+             console.log("AAAAAAA")
+             if(user.length>=1)
              {
-                 res.send("Already U Register that Course");
+                 const a=typeof(user);
+                 console.log(user.length);
+                 console.log(a);
+            return  res.send("Already User Register this Course");
+               // res.send(user)
              }
     else{
         next();

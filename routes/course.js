@@ -42,13 +42,29 @@ const upload=multer({storage:storage,
 
 
 //get course
-router.get('/display',async(req,res)=>{
+router.get('/display',(req,res)=>{
   
    courseSchema.find()
    .exec()
    .then(course=>{
-        console.log(course);
-        res.json(course)
+     // console.log(typeof(course))
+       //console.log(course.name);
+      // console.log(course.length);
+     const a="th"
+       course.forEach(c=>{
+        // console.log(c.name);
+         const title=(c.name).toLowerCase();
+         if(title.indexOf(a)==-1){
+
+         }
+         else{
+           console.log(c.name);
+         }
+       })
+
+         //  console.log(course);
+         res.json(course)
+
     })
     .catch(err=>{
         console.log("Course detail retriving error:"+err);
@@ -60,6 +76,25 @@ router.get('/display',async(req,res)=>{
   //select({name:1,id:1}).limit(4).sort({name:1})
   //res.json(course);
 
+
+})
+
+//get particular course
+router.get('/display/:id',(req,res)=>{
+ courseSchema
+         .findById(req.params.id)
+         .then(course=>{
+           res.json(course);
+
+         })
+         .catch(err=>{
+          res.json({
+            error:err,
+          })
+
+
+         })
+  
 
 })
 
@@ -228,8 +263,8 @@ router.put('/update/:id', async (req, res) => {
   // delete existing course
 
   //[auth,authrole]
-  //checkAuth.checkIfContentProvider,
-router.delete('/delete/:id',(req,res)=>{
+  
+router.delete('/delete/:id',checkAuth.checkIfContentProvider,(req,res)=>{
   console.log(" In course delete Route");
 const deleteCourseId=req.params.id;
 
@@ -272,16 +307,66 @@ courseSchema
 })
 
 
+  // //register users in particular course
+  // //,courseController.checkUserAlreadyRegisterd
+  // router.post('/registerCourse/:id',(req,res)=>{
+  //   console.log("IN  register course route");
+  //   const newuser=req.body.userId;
+  //   const courseId=req.params.id;
+  //   courseSchema
+  //             .findById(req.params.id)
+  //             .then(course=>{
+  //              // console.log(course)
+  //               if(!course){
+  //                 res.status(200).json({
+  //                   state:false,
+  //                   Message:"Course not exit yet"
+  //                 })
+  //               }else{
+  //             // update user Schema
+  //               userSchema
+  //                     .findById(newuser)
+  //                     .then(user=>{
+  //                       user.registerCourse.push(courseId);
+  //                       user.save();
+                           
+  //                     })
+                     
+
+  //                  //update  course Schema
+  //               course.registerUser.push(newuser);
+                
+  //               course.save()
+  //               .then(result=>{
+  //                 res.status(500).json({
+  //                   course:result,
+  //                   state:true
+  //                 })
+  //               })
+  //             }
+  //           })
+            
+  //             .catch(err=>{
+  //               res.status(500).json({
+  //                 state:false,
+  //                 Message:"Errrrrrr"
+
+  //            })
+  //             })
+
+  // })
   //register users in particular course
   //,courseController.checkUserAlreadyRegisterd
-  router.post('/registerCourse/:id',(req,res)=>{
+  router.post('/registerCourse/:id',courseController.checkUserAlreadyRegisterd,(req,res)=>{
     console.log("IN  register course route");
     const newuser=req.body.userId;
     const courseId=req.params.id;
+   // console.log(newuser);
+    console.log(courseId);
     courseSchema
               .findById(req.params.id)
               .then(course=>{
-                console.log(course)
+              //  console.log(course)
                 if(!course){
                   res.status(200).json({
                     state:false,
@@ -293,7 +378,9 @@ courseSchema
                       .findById(newuser)
                       .then(user=>{
                         user.registerCourse.push(courseId);
-                        user.save();
+                        user.save()
+                       
+                        
                       })
                      
 
@@ -319,7 +406,6 @@ courseSchema
               })
 
   })
-
 
 
 //get register users details in particular course

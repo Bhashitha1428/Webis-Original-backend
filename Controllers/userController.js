@@ -53,11 +53,12 @@ function getUserById (id, callback){
     ///////////////////////////////
 
     /* user register*/
-    function registerUser(req, res){
+    function registerUser(req, res,next){
     User
     .find({ email: req.body.email })
     .exec()
-    .then(user => { 
+    .then(user => {
+        
         if(user.length >= 1){
             console.log('user exist');
             return res.status(409).json({
@@ -65,6 +66,7 @@ function getUserById (id, callback){
                 exist: true,
                 Message:"use exist"
             });
+        
         } else {
             bcrypt.hash(req.body.password, 10, (err, hash) => {
                 if(err){

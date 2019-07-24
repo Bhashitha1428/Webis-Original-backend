@@ -19,7 +19,7 @@ function decode(req, res, next){
 }
 
 
-//check user is Admin
+//check user is Content Provider
 function checkIfContentProvider(req, res, next) {
     try {
         const decodeJWT = decode(req, res, next);

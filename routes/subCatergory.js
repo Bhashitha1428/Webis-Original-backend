@@ -3,6 +3,10 @@ const express = require('express');
 const router = express.Router();
 const subCatergory=require('../models/subCatergory');
 
+const courseSchema=require('../models/course');
+const Course=courseSchema.course;
+
+
 // add subCatergory
 router.post('/addSubCatergory',(req,res,next)=>{
     
@@ -65,6 +69,7 @@ router.get('/display',(req,res)=>{
     subCatergory.find()
     .exec()
     .then(result=>{
+       
          console.log(result);
          res.json(result)
      })
@@ -77,24 +82,62 @@ router.get('/display',(req,res)=>{
  
  })
 
- //get subCatergory according to particular catergory
+ //get subCatergory and courses(belongs to that Catergory) according to particular catergory
 
 router.get('/display/:catergory',(req,res)=>{
+    
     const cat=req.params.catergory;
     subCatergory.find({catergoryName:cat})
     .exec()
     .then(result=>{
-         console.log(result);
-         res.json(result)
+        Course.find({catergory:cat})
+        .then(cor=>{
+            res.json({
+                cor:cor,
+                re:result
+
+            });
+            
+        })
+        .catch(err=>{
+            res.json(err);
+            console.log("Course detail retriving error:"+err);
+
+        })
+         //console.log(result);
+       // res.json(result)
      })
      .catch(err=>{
          console.log("Sub Catergories detail retriving error:"+err);
      })
- 
+     
    
  
  
  })
+//get Course in particular catergory with subCatergory
+ router.get('/display/:catergory/:subCatergory',(req,res)=>{
+    
+    const cat=req.params.catergory;
+    const subCat=req.params.subCatergory;
+    Course.find({catergory:cat,subCatergory:subCat})
+    .exec()
+    .then(result=>{
+        
+         //console.log(result);
+        res.json(result)
+     })
+     .catch(err=>{
+         console.log("Sub Catergories detail retriving error:"+err);
+     })
+     
+   
+ 
+ 
+ })
+
+
+
 
  //delete sub Catergory
 

@@ -16,6 +16,10 @@ const uploadController=require('../Controllers/uploadController');
 //Register User 
 router.post('/register', userController.registerUser);
 
+
+
+
+
 //upload user image for profile
 router.post('/uploadUserImage/:userId', uploadController.userImageUpload.single('image'), (req, res, next) => {
     console.log("uploadUserImage")
@@ -47,7 +51,7 @@ router.post('/uploadUserImage/:userId', uploadController.userImageUpload.single(
         })
 })
 
-//Authenticate
+//Authenticate(Login)
 router.post('/authenticate', (req, res, next)=> {
     console.log("ooooo");
     const email= req.body.email;
@@ -145,6 +149,64 @@ router.get('/profile',passport.authenticate('jwt',{session:false}), (req, res, n
 
 
 
+
+
+
+//get prticular user registered course details by Id
+router.get('/:userId', userController.checkUserIfExist, (req, res, next) => {
+    const Id = req.params.userId;
+    User
+        .findById(Id)
+        .populate('registerCourse ','name-_id')
+        .select('registerCourse')
+      
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                User: result
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                state: false
+            });
+        });
+})
+
+ 
+// update user Profile
+router.put('/update/:id', async (req, res) => {
+    console.log("In userDetails update route")
+    const c= await User.findByIdAndUpdate(req.params.id, {
+         fname: req.body.fname ,
+         lname:req.body.lname ,
+         
+         
+
+    
+    },{
+      new:true //return course with updated values
+    })
+    .exec()
+    .then(user=>{
+      res.json({
+         user:user,
+         state:true 
+      })
+     
+   
+    })
+    .catch(err=>{
+      res.status(500).json({
+        state:false,
+        error:err
+    })
+    })
+    
+});
+
+
 //delete user
 router.delete('/delete/:id',checkAuth.checkIfAdmin,userController.checkUserIfExist,(req,res)=>{
     console.log(" In user delete Route");
@@ -157,7 +219,7 @@ router.delete('/delete/:id',checkAuth.checkIfAdmin,userController.checkUserIfExi
               
                    if(!user){
                     res.status(500).json({
-                       Message:"Course is not found" ,
+                       Message:"User is not found" ,
                        state:false
                       
                      })
@@ -188,30 +250,6 @@ router.delete('/delete/:id',checkAuth.checkIfAdmin,userController.checkUserIfExi
   
   })
 
-
-//get prticular user registered course details by Id
-router.get('/:userId', userController.checkUserIfExist, (req, res, next) => {
-    const Id = req.params.userId;
-    User
-        .findById(Id)
-        .populate('registerCourse ','name-_id')
-        .select('registerCourse')
-      
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                User: result
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                state: false
-            });
-        });
-})
-
  
-
 
 module.exports = router;
