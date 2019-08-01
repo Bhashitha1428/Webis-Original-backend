@@ -146,8 +146,25 @@ router.get('/profile',passport.authenticate('jwt',{session:false}), (req, res, n
 //         });
    
 // });
+ 
+//get particular user
+router.get('/:id',(req,res)=>{
+      User
+         .findById(req.params.id)
+         .then(user=>{
+           res.json(user);
+
+         })
+         .catch(err=>{
+          res.json({
+            error:err,
+          })
 
 
+         })
+  
+
+})
 
 
 
