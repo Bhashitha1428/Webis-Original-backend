@@ -2,6 +2,8 @@ const bcrypt=require('bcryptjs');
 const config = require('../config/database');
 const User=require('../models/user');
 
+const crypto = require('crypto');
+
 
 function getUserById (id, callback){
     User.findById(id, callback);
@@ -145,11 +147,53 @@ function checkUserIfExist(req, res, next){
 
 
 
+//generate random hexadecimal number for verifications
+function generateRandomNumber(req, res, next) {
+    const len = 7;
+    return crypto
+      .randomBytes(Math.ceil(len / 2))
+      .toString('hex')
+      .slice(0, len) 
+}  
+
+function generateRandomPassword(req, res, next) {
+    const len = 10;
+    return crypto
+        .randomBytes(Math.ceil(len / 2))
+        .toString('hex')
+        .slice(0, len)
+}
+
+//change password
+function resetPassword(userId, newPassword){
+    bcrypt.hash(newPassword, 10, (err, hash) => {
+        if(err){
+            console.log(err)
+            return err;
+        }else {
+            console.log(hash)
+            User
+                .update({ _id: userId },{$set: { password: hash }})
+                .then(result => {
+                    console.log(result)
+                })
+
+        }
+    });
+}
+
+
+
+
     module.exports={
         registerUser:registerUser,
         getUserByEmail:getUserByEmail,
         comparePassword:comparePassword,
         getUserById:getUserById,
         checkUserIfExist:checkUserIfExist,
+
+        generateRandomNumber: generateRandomNumber,
+        generateRandomPassword: generateRandomPassword,
+        resetPassword: resetPassword,
         
     }

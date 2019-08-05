@@ -5,15 +5,17 @@ const Course=require('../models/course');
 const CourseSchema=Course.course;
 
 function decode(req, res, next){
-    //const token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.authorization.split(" ")[1];
    
-    const token=req.header('x-auth-token');
-    //console.log(token)
+   // const token=req.header('x-auth-token');
+    console.log(token)
+   
    
     const decodeJWT = jwt.verify(token,config.secret);
  
-    
+    console.log("LLLLLLLLL")
     console.log(decodeJWT.user._id)
+   
    
    // return dedecodeJWT;
    return decodeJWT.user._id;
@@ -28,6 +30,7 @@ function checkUserAlreadyRegisterd(req,res,next){
     console.log("BBBBBBBBBBB");
     console.log(req.body.courseId);
     try {
+        
         const decodeUserID = decode(req, res, next);
         console.log(decodeUserID);
         

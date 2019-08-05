@@ -10,6 +10,7 @@ const checkAuth=require('../middlewares/check-auth');
 
 
 const uploadController=require('../Controllers/uploadController');
+const emailController = require('../controllers/emailController');
 
 
 
@@ -266,6 +267,79 @@ router.delete('/delete/:id',checkAuth.checkIfAdmin,userController.checkUserIfExi
   
   
   })
+
+//send reset password email to user
+router.get('/forgotPassword/:email', (req, res, next) => {
+    if(!req.params.email){
+        res.status(401).json({
+            state: false
+        })
+    } else {  
+        const userEmail = req.params.email;
+        console.log(userEmail);
+        User 
+            .find({ email: userEmail })
+            .exec()
+            .then(user => {
+                if(user){
+                    console.log(user[0]._id);
+                    const verificationCode = userController.generateRandomNumber()
+                    console.log(verificationCode);
+                    emailController.sendVerificationCode(userEmail, verificationCode);
+               
+                    res.status(200).json({
+                        state: true, 
+                        userId: user[0]._id,
+                        code: verificationCode
+                    })
+                } else {  
+                    res.status(500).json({ 
+                        state: false,
+                        Message: "Not Registered User"
+                    })
+                }
+            }) 
+            .catch(err => {
+                console.log(err);    
+                res.status(500).json({
+                    state: false
+                })
+            })
+    }
+});
+
+
+
+
+//After verify the email this can save new password for password forgoten person
+router.get('/newPassword/:email', (req, res, next) => {
+    userEmail = req.params.email;
+    //console.log(userEmail)
+    User
+        .find({ email: userEmail })
+        .exec()
+        .then(user => {  
+            
+            if(user){
+                console.log(user[0]._id)
+                const newPassword = userController.generateRandomPassword()
+                console.log(newPassword);
+                userController.resetPassword(user[0]._id, newPassword)
+                emailController.sendNewPassword(userEmail, newPassword);
+                    res.status(200).json({
+                        state: true,
+                        password: newPassword
+                    })
+            }
+        })
+        .catch(err => {
+            res.status(401).json({
+                error: err,
+                state: false
+            })
+        })
+})
+
 
  
 
