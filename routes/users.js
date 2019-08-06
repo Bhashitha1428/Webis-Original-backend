@@ -208,7 +208,7 @@ router.put('/update/:id', async (req, res) => {
     })
     .exec()
     .then(user=>{
-      res.json({
+      res.status(200).json({
          user:user,
          state:true 
       })

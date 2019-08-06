@@ -389,7 +389,7 @@ courseSchema
                 
                 course.save()
                 .then(result=>{
-                  res.status(500).json({
+                  res.status(200).json({
                     course:result,
                     state:true
                   })

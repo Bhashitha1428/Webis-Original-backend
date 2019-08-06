@@ -5,15 +5,15 @@ const Course=require('../models/course');
 const CourseSchema=Course.course;
 
 function decode(req, res, next){
-    const token = req.headers.authorization.split(" ")[1];
+    //const token = req.headers.authorization.split(" ")[1];
    
-   // const token=req.header('x-auth-token');
+    const token=req.header('Authorization');
     console.log(token)
    
    
     const decodeJWT = jwt.verify(token,config.secret);
  
-    console.log("LLLLLLLLL")
+    
     console.log(decodeJWT.user._id)
    
    
@@ -44,7 +44,7 @@ function checkUserAlreadyRegisterd(req,res,next){
              {
                  const a=typeof(user);
                  console.log(user.length);
-                 console.log(a);
+                 //console.log(a);
             return  res.send("Already User Register this Course");
                // res.send(user)
              }

@@ -4,7 +4,7 @@ const config = require('../config/database');
 function decode(req, res, next){
     //const token = req.headers.authorization.split(" ")[1];
    
-    const token=req.header('x-auth-token');
+    const token=req.header('Authorization');
    // console.log(token)
     const decodeJWT = jwt.verify(token,config.secret);
 
