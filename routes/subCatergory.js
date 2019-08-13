@@ -82,8 +82,8 @@ router.get('/display',(req,res)=>{
  
  })
 
- //get subCatergory and courses(belongs to that Catergory) according to particular catergory
-
+ 
+ //get Course in particular Catergory(not a  SubCatergory)
 router.get('/display/:catergory',(req,res)=>{
     
     const cat=req.params.catergory;
@@ -115,7 +115,29 @@ router.get('/display/:catergory',(req,res)=>{
  
  
  })
-//get Course in particular catergory with subCatergory
+
+ //get Course in particular  subCatergory
+ router.get('/:subCatergory',(req,res)=>{
+    
+    console.log("SSSSSSSSS")
+    const subCat=req.params.subCatergory;
+    Course.find({subCatergory:subCat})
+    .exec()
+    .then(result=>{
+        
+         //console.log(result);
+        res.json(result)
+     })
+     .catch(err=>{
+         console.log("Sub Catergories detail retriving error:"+err);
+     })
+     
+   
+ 
+ 
+ })
+
+//get subCatergory and courses(belongs to that Catergory) according to particular catergory
  router.get('/display/:catergory/:subCatergory',(req,res)=>{
     
     const cat=req.params.catergory;
@@ -135,7 +157,6 @@ router.get('/display/:catergory',(req,res)=>{
  
  
  })
-
 
 
 

@@ -10,6 +10,9 @@ const courseController=require('../Controllers/courseController');
 
 const checkAuth=require('../middlewares/check-auth');
 
+const uploadController=require('../Controllers/uploadController');
+
+
 //custom middleware
 //const auth=require('../middlewares/auth');
 //const authrole=require('../middlewares/authrole');
@@ -159,6 +162,10 @@ console.log("CCCCCCCCC")
         })
   })
 
+//store course
+router.post('/put',  uploadController.userImageUpload.single('image'),courseController.storeCourse);
+
+
 
 
 
@@ -175,7 +182,7 @@ router.post('/store',upload.single('courseImg'), (req,res)=>{
     newCourse.name=req.body.name;
     newCourse.author=req.body.author;
     newCourse.duration=req.body.duration;
-    newCourse.content=req.body.content;
+   // newCourse.content=req.body.content;
     newCourse.description=req.body.description;
     newCourse.catergory=req.body.catergory;
     newCourse.subCatergory=req.body.subCatergory;
@@ -195,6 +202,9 @@ router.post('/store',upload.single('courseImg'), (req,res)=>{
         state:false,
         error:err
     })
+
+
+
         
     })
 
