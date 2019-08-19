@@ -149,7 +149,7 @@ router.get('/profile',passport.authenticate('jwt',{session:false}), (req, res, n
 // });
  
 //get particular user
-router.get('/:id',(req,res)=>{
+router.get('particularUser/:id',(req,res)=>{
       User
          .findById(req.params.id)
          .then(user=>{
@@ -172,10 +172,11 @@ router.get('/:id',(req,res)=>{
 
 //get prticular user registered course details by Id
 router.get('/:userId', userController.checkUserIfExist, (req, res, next) => {
+    
     const Id = req.params.userId;
     User
         .findById(Id)
-        .populate('registerCourse ','name-_id')
+        .populate('registerCourse')
         .select('registerCourse')
       
         .exec()

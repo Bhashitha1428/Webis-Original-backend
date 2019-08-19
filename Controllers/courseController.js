@@ -80,9 +80,9 @@ function checkUserAlreadyRegisterd(req,res,next){
 function storeCourse(req,res,next){
   
    console.log("GGGGGGGG")
-   cloudinary.uploader.upload(req.file.path, function(result) {
-    imageSecureURL = result.secure_url;
-})
+//    cloudinary.uploader.upload(req.file.path, function(result) {
+//     imageSecureURL = result.secure_url;
+// })
      saveCourse(req,res)
      .then(result=>{
          console.log("Course stored sucessfully");
@@ -102,11 +102,20 @@ function storeCourse(req,res,next){
 }
 
 function saveCourse(req,res){
-    
+    try{
+        
     cloudinary.uploader.upload(req.file.path, function(result) {
            imageSecureURL = result.secure_url;
+           
+           
     })
-     
+}catch(error ){
+    console.log("KKKKKKK")
+console.log("Handled error(because image not pass by user) "+error)
+imageSecureURL="";
+
+
+} 
 
 
     const content=new ContentSchema({
