@@ -103,14 +103,14 @@ function storeCourse(req,res,next){
 
 function saveCourse(req,res){
     try{
-        
+        console.log("WWWWWWWWW")
     cloudinary.uploader.upload(req.file.path, function(result) {
            imageSecureURL = result.secure_url;
            
            
     })
 }catch(error ){
-    console.log("KKKKKKK")
+    //console.log("KKKKKKK")
 console.log("Handled error(because image not pass by user) "+error)
 imageSecureURL="";
 
@@ -131,7 +131,13 @@ imageSecureURL="";
         catergory:req.body.catergory,
         subCatergory:req.body.subCatergory,
         content:content._id,
-        courseImg:imageSecureURL
+        courseImg:imageSecureURL,
+        //************** */
+
+        content1:req.body.content1,
+        content2:req.body.content2,
+        content3:req.body.content3,
+      //************* */
 
         
     });

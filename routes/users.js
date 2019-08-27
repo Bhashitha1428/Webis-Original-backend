@@ -98,6 +98,7 @@ router.post('/authenticate', (req, res, next)=> {
 
 //profile
 router.get('/profile',passport.authenticate('jwt',{session:false}), (req, res, next)=> {
+  
     res.json({user:req.user});
 });
 
@@ -147,8 +148,34 @@ router.get('/profile',passport.authenticate('jwt',{session:false}), (req, res, n
 //         });
    
 // });
+
+
+//get all users details
+router.get('/allUserDetails',(req,res)=>{
+    User
+      .find()
+      .then(users=>{
+          res.status(200).json({
+              Users:users,
+              state:true
+          })
+      })
+      .catch(err=>{
+       res.status(500).json({
+           error:err,
+           mesg:"Users data taking error"
+       })
+
+      })
+
+
+})
+//
+
+
+
  
-//get particular user
+//get particular user by Id
 router.get('particularUser/:id',(req,res)=>{
       User
          .findById(req.params.id)
@@ -166,7 +193,25 @@ router.get('particularUser/:id',(req,res)=>{
   
 
 })
-
+//get users by role
+router.get('/findByRole/:role', (req, res, next) => {
+    const role = req.params.role;
+    User
+        .find({ role: role })
+        .exec() 
+        .then(result => { 
+          //  console.log(result);
+                res.status(200).json({
+                    User: result
+            })
+        })
+        .catch(err => { 
+            console.log(err);
+            res.status(500).json({  
+                error: err
+            });
+        });
+})
 
 
 
@@ -226,7 +271,7 @@ router.put('/update/:id', async (req, res) => {
 });
 
 
-//delete user
+//delete user by Id
 router.delete('/delete/:id',checkAuth.checkIfAdmin,userController.checkUserIfExist,(req,res)=>{
     console.log(" In user delete Route");
   const userId=req.params.id;

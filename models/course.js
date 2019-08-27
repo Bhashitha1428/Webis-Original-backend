@@ -6,11 +6,21 @@ const courseSchema= mongoose.Schema({
   name:{ type:String},
   author:{type:String},
   duration:{type:Number},
- // content:{type:Array},
+
   description:{type:String},
   courseImg:{type:String},
   catergory:{type:String},
   subCatergory:{type:String},
+
+  
+
+  /////*********** */
+  content1:{type:Array},
+  content2:{type:Array},
+  content3:{type:Array},
+
+//************* */
+
 
   url:{type:String},
 

@@ -2,7 +2,7 @@ const express=require('express');
 const router=express.Router();
 const Course=require('../models/course');
 const courseSchema=Course.course;
-const catergorySchema=Course.catergory;
+
 
 const userSchema=require('../models/user');
 const courseController=require('../Controllers/courseController');
@@ -219,8 +219,8 @@ router.post('/store',upload.single('courseImg'), (req,res)=>{
 
 })
 
-//update exsiting course
 
+//update exsiting course
 router.put('/update/:id', async (req, res) => {
     console.log("IN course update Route");
     const c= await courseSchema.findByIdAndUpdate(req.params.id, {
@@ -268,6 +268,24 @@ router.put('/update/:id', async (req, res) => {
   
 
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   // delete existing course
@@ -365,8 +383,10 @@ courseSchema
   //             })
 
   // })
+
+
+
   //register users in particular course
-  //,courseController.checkUserAlreadyRegisterd
   router.post('/registerCourse/:id',courseController.checkUserAlreadyRegisterd,(req,res)=>{
     console.log("IN  register course route");
     const newuser=req.body.userId;
