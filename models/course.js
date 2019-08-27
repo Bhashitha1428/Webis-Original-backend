@@ -12,6 +12,10 @@ const courseSchema= mongoose.Schema({
   catergory:{type:String},
   subCatergory:{type:String},
 
+  type:{type:String},// paid course or free course
+  skillLevel:{type:String} ,//beginner,intermediate,advanve
+
+  permission:{type:Boolean},
   
 
   /////*********** */

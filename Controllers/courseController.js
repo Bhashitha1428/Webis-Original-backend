@@ -130,6 +130,10 @@ imageSecureURL="";
         description:req.body.description,
         catergory:req.body.catergory,
         subCatergory:req.body.subCatergory,
+        type:req.body.type,
+        skillLevel:req.body.skillLevel,
+        permission:false,
+
         content:content._id,
         courseImg:imageSecureURL,
         //************** */
@@ -138,7 +142,7 @@ imageSecureURL="";
         content2:req.body.content2,
         content3:req.body.content3,
       //************* */
-
+    
         
     });
     content.save()

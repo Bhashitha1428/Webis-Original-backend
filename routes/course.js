@@ -271,20 +271,35 @@ router.put('/update/:id', async (req, res) => {
 
 
 
+//Give permission to particular course or deny permission to particular course
+//update permission attribute exsiting course
+//checkAuth.checkIfAdmin
+router.put('/givePermissionOrNot/:id', async (req, res) => {
+  console.log("IN course Permission give or deny route");
+  const c= await courseSchema.findByIdAndUpdate(req.params.id, {
+       permission:req.body.value //must pass boolean value because permission is boolen attribute in course model
+
+  
+  },{
+    new:true //return course with updated values
+  })
+  .exec()
+  .then(course=>{
+    res.json(course)
+   
+ 
+  })
+  .catch(err=>{
+    res.status(500).json({
+      state:false,
+      msg:"course does not exist",
+      error:err
+  })
+  })
+  
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+});
 
 
 
@@ -292,7 +307,7 @@ router.put('/update/:id', async (req, res) => {
 
   //[auth,authrole]
   
-router.delete('/delete/:id',checkAuth.checkIfContentProvider,(req,res)=>{
+router.delete('/delete/:id',checkAuth.checkIfAdmin,(req,res)=>{
   console.log(" In course delete Route");
 const deleteCourseId=req.params.id;
 
