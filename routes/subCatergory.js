@@ -8,9 +8,9 @@ const Course=courseSchema.course;
 
 
 // add subCatergory
-router.post('/addSubCatergory/:subCatergoryName',(req,res,next)=>{
+router.post('/addSubCatergory',(req,res,next)=>{
     
-    const subCName=req.params.subCatergoryName
+    const subCName=req.body.subCatergoryName
     subCatergory
               .findOne({name:subCName})//findone return one object so it check using if block
                                          //if we use find it return array of objects so it can not check whether ia empty using if block
@@ -90,7 +90,11 @@ router.get('/display/:catergory',(req,res)=>{
     subCatergory.find({catergoryName:cat})
     .exec()
     .then(result=>{
-        Course.find({catergory:cat})
+        Course.find({
+           // catergory:cat,permission:true
+            $and: [ { catergory: cat }, {permission:true } ]
+        
+        })
         .then(cor=>{
             res.json({
                 cor:cor,
@@ -121,7 +125,11 @@ router.get('/display/:catergory',(req,res)=>{
     
     console.log("SSSSSSSSS")
     const subCat=req.params.subCatergory;
-    Course.find({subCatergory:subCat})
+    Course.find({
+      //  subCatergory:subCat
+      $and: [ { subCatergory: subCat }, {permission:true } ]
+    
+    })
     .exec()
     .then(result=>{
         
@@ -142,7 +150,12 @@ router.get('/display/:catergory',(req,res)=>{
     
     const cat=req.params.catergory;
     const subCat=req.params.subCatergory;
-    Course.find({catergory:cat,subCatergory:subCat})
+    Course.find({
+       // catergory:cat,subCatergory:subCat
+
+       $and: [ { catergory: cat },{catergory:cat,subCatergory:subCat} ,{permission:true } ]
+    
+    })
     .exec()
     .then(result=>{
         
@@ -162,9 +175,9 @@ router.get('/display/:catergory',(req,res)=>{
 
  //delete sub Catergory
 
- router.delete('/delete',(req,res)=>{
+ router.delete('/delete/:subCatergoryName',(req,res)=>{
      
-     const subCName=req.body.subCatergoryName
+     const subCName=req.params.subCatergoryName
     subCatergory
       .findOne({name:subCName})
       .then(result=>{

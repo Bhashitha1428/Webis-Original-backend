@@ -4,9 +4,9 @@ const router = express.Router();
 const catergory=require('../models/catergory');
 
 // add Catergory
-router.post('/addCatergory/:catergoryName',(req,res,next)=>{
+router.post('/addCatergory',(req,res,next)=>{
 
-    const CName=req.params.catergoryName
+    const CName=req.body.catergoryName
     console.log(CName)
        catergory
               .findOne({name:CName})//findone return one object so it check using if block
@@ -81,9 +81,9 @@ router.get('/display',(req,res)=>{
 
  //delete  Catergory
 
- router.delete('/delete',(req,res)=>{
+ router.delete('/delete/:subCatergoryName',(req,res)=>{
      
-    const CName=req.body.subCatergoryName
+    const CName=req.params.subCatergoryName
    catergory
      .findOne({name:CName})
      .then(result=>{

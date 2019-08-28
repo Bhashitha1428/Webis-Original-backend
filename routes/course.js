@@ -44,10 +44,10 @@ const upload=multer({storage:storage,
 
 
 
-//get course
+//get permission true courses
 router.get('/display',(req,res)=>{
   
-   courseSchema.find()
+   courseSchema.find({permission:true})
    .exec()
    .then(course=>{
      // console.log(typeof(course))
@@ -78,6 +78,25 @@ router.get('/display',(req,res)=>{
   //.select()
   //select({name:1,id:1}).limit(4).sort({name:1})
   //res.json(course);
+
+
+})
+
+
+//get permission false courses(For Admins)
+router.get('/display/permissionDenyCourse',(req,res)=>{
+  
+  courseSchema.find({permission:false})
+  .exec()
+  .then(course=>{
+  
+        res.json(course)
+
+   })
+   .catch(err=>{
+       console.log("Course detail retriving error:"+err);
+   })
+
 
 
 })
