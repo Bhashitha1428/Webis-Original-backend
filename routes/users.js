@@ -176,7 +176,7 @@ router.get('/allUserDetails',(req,res)=>{
 
  
 //get particular user by Id
-router.get('particularUser/:id',(req,res)=>{
+router.get('/particularUser/:id',(req,res)=>{
       User
          .findById(req.params.id)
          .then(user=>{

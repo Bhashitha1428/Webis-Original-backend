@@ -4,9 +4,9 @@ const router = express.Router();
 const catergory=require('../models/catergory');
 
 // add Catergory
-router.post('/addCatergory',(req,res,next)=>{
+router.post('/addCatergory/:catergoryName',(req,res,next)=>{
 
-    const CName=req.body.catergoryName
+    const CName=req.params.catergoryName
     console.log(CName)
        catergory
               .findOne({name:CName})//findone return one object so it check using if block
@@ -24,7 +24,7 @@ router.post('/addCatergory',(req,res,next)=>{
                       
                  
                     const newCatergory=new catergory({
-                    name:req.body.catergoryName,
+                    name:CName,
                 })
             newCatergory
                 .save()
@@ -122,5 +122,35 @@ router.get('/display',(req,res)=>{
      }) 
      })
 
+
+
+      
+// update catergory
+router.put('/updateCatergory/:id', async (req, res) => {
+    console.log("In catergory update route")
+    const c= await catergory.findByIdAndUpdate(req.params.id, {
+         name: req.body.catergoryName ,
+         
+         
+    },{
+      new:true //return Catergory with updated values
+    })
+    .exec()
+    .then(catergory=>{
+      res.status(200).json({
+         catergory:catergory,
+         state:true 
+      })
+     
+   
+    })
+    .catch(err=>{
+      res.status(500).json({
+        state:false,
+        error:err
+    })
+    })
+    
+});
 
 module.exports=router;

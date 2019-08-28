@@ -8,9 +8,9 @@ const Course=courseSchema.course;
 
 
 // add subCatergory
-router.post('/addSubCatergory',(req,res,next)=>{
+router.post('/addSubCatergory/:subCatergoryName',(req,res,next)=>{
     
-    const subCName=req.body.subCatergoryName
+    const subCName=req.params.subCatergoryName
     subCatergory
               .findOne({name:subCName})//findone return one object so it check using if block
                                          //if we use find it return array of objects so it can not check whether ia empty using if block
@@ -26,7 +26,7 @@ router.post('/addSubCatergory',(req,res,next)=>{
                   else{
                  
                     const newCatergory=new subCatergory({
-                    name:req.body.subCatergoryName,
+                    name:subCName,
                     catergoryName:req.body.catergoryName
                 })
             newCatergory
