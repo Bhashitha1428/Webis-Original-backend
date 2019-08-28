@@ -304,7 +304,11 @@ router.put('/givePermissionOrNot/:id', async (req, res) => {
   })
   .exec()
   .then(course=>{
-    res.json(course)
+    res.status(200).json({
+      course:course,
+      state:true
+    
+    })
    
  
   })

@@ -217,6 +217,36 @@ router.get('/display/:catergory',(req,res)=>{
       })
 
 
+// update subCatergory
+router.put('/updateSubCatergory/:id', async (req, res) => {
+    console.log("In sub catergory update route")
+    const c= await subCatergory.findByIdAndUpdate(req.params.id, {
+         name: req.body.subCatergoryName ,
+         catergoryName:req.body.catergoryName
+         
+         
+    },{
+      new:true //return Catergory with updated values
+    })
+    .exec()
+    .then(subCatergory=>{
+      res.status(200).json({
+         subCatergory:subCatergory,
+         state:true 
+      })
+     
+   
+    })
+    .catch(err=>{
+      res.status(500).json({
+        state:false,
+        error:err,
+       
+    })
+    })
+    
+});
+
  
 
 
