@@ -7,6 +7,7 @@ const config = require('../config/database');
 const User = require('../models/user');
 const userController=require('../Controllers/userController');
 const checkAuth=require('../middlewares/check-auth');
+const bcrypt=require('bcryptjs');
 
 
 const uploadController=require('../Controllers/uploadController');
@@ -233,17 +234,76 @@ router.get('/:userId', userController.checkUserIfExist, (req, res, next) => {
                 state: false
             });
         });
+});
+
+
+//edit user account details with password***
+//check password of a loged user before edit his profile and Edit user profile
+router.post('/editUserProfile/:userId', (req, res, next) => {
+    const userId = req.params.userId;
+    const currentPassword = req.body.password;
+    // const thispassword;
+    User
+        .findById(userId)
+        .exec()
+        .then(user => {
+            savedPassword = user.password;
+            bcrypt.compare(currentPassword, savedPassword, (err, result) => {
+                if(result){
+                         
+                    bcrypt.hash(req.body.newPassword, 10, (err, hash) => {
+                        if(err){
+                            return res.status(500).json({     
+                            });
+                        }else {
+                                
+                            User.update({_id:userId},{
+                                $set:{
+                                   fname: req.body.fname ,
+                                   lname:req.body.lname , 
+                                   password:hash 
+                                }
+                            })
+                            .then(result=>{
+                                res.status(200).json({
+                                    state:true,
+                                    user:result
+                                })
+
+                            })
+                            .catch(err=>{
+                                res.json(err);
+                            })
+                               
+                               
+                        }
+
+
+                    })
+  }
+
+
+                   
+                 else {
+                    res.status(500).json({
+                        state: false
+                    })
+                }
+            })
+        })
 })
 
  
-// update user Profile
+// edit(update) user Profile without password
 router.put('/update/:id', async (req, res) => {
     console.log("In userDetails update route")
     const c= await User.findByIdAndUpdate(req.params.id, {
          fname: req.body.fname ,
          lname:req.body.lname ,
+         email:req.body.email,
          
-         
+
+
 
     
     },{
