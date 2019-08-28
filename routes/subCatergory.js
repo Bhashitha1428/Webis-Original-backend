@@ -90,7 +90,7 @@ router.get('/display/:catergory',(req,res)=>{
     subCatergory.find({catergoryName:cat})
     .exec()
     .then(result=>{
-        Course.find({catergory:cat}&&{permission:true})
+        Course.find({catergory:cat})
         .then(cor=>{
             res.json({
                 cor:cor,
