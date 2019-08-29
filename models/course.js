@@ -5,12 +5,17 @@ const courseSchema= mongoose.Schema({
  
   name:{ type:String},
   author:{type:String},
-  duration:{type:Number},
+  duration:{type:String},//lessmonth,1-3month,3+month
+  
+  duration2:{type:String},
 
   description:{type:String},
   courseImg:{type:String},
   catergory:{type:String},
   subCatergory:{type:String},
+
+  stars:{type:Number},//for count rating
+  count:{type:Number},//for count rating
 
   type:{type:String},// paid course or free course
   skillLevel:{type:String} ,//beginner,intermediate,advanve

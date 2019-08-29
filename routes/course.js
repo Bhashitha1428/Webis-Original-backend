@@ -520,6 +520,52 @@ router.get('/registerUsers',(req,res)=>{
 
 })
 
+//rating route
+
+router.put('/rating/:id',(req,res)=>{
+  console.log("Course rating route");
+  const courseId=req.params.id
+  const value=req.body.star;
+  courseSchema
+      .findOneAndUpdate({_id:courseId},{
+        $inc:{
+          stars:value,
+          count:1
+           },
+          
+          },
+          {
+            new:true
+          
+          }) 
+
+       .exec()   
+      .then(result=>{
+        if(result){
+            res.status(200).json({
+              state:true,
+              stars:result.stars,
+              count:result.count,
+              rating:(result.stars/result.count)
+
+
+            });
+        }
+    })
+    .catch(error => {
+        res.status(500).json({
+          error: error,
+          state :false,
+          msg:"course not found or other error"
+        
+        });
+        
+    });
+
+
+
+})
+
 
 
 

@@ -291,39 +291,76 @@ router.post('/editUserProfile/:userId', (req, res, next) => {
                 }
             })
         })
+           .catch(err=>{
+                 res.status(500).json({
+                    error:err,
+                    msg:"User not exit"
+                })
+          })
 })
 
  
 // edit(update) user Profile without password
-router.put('/update/:id', async (req, res) => {
-    console.log("In userDetails update route")
-    const c= await User.findByIdAndUpdate(req.params.id, {
-         fname: req.body.fname ,
-         lname:req.body.lname ,
-         email:req.body.email,
+router.put('/update/:id',  (req, res) => {
+    const userId=req.params.id;
+    console.log("In userDetails update route");
+     User
+         //.find({_id:userId})
+         .update({_id:userId},{
+            $set:{
+                fname:req.body.fname,
+                lname:req.body.lname
+            }  
+            
+         })
+         .then(result=>{
+             if(result){
+                 res.json({
+                  result:result,
+                  state:true   
+                });
+             }
+         })
+         .catch(err=>{
+             res.status(500).json({
+                 err:err,
+                 msg:"user not exit or other error"
+             });
+         })
+
+       
+
+
+
+
+
+    // const c= await User.findByIdAndUpdate(req.params.id, {
+    //      fname: req.body.fname ,
+    //      lname:req.body.lname ,
+    //      email:req.body.email,
          
 
 
 
     
-    },{
-      new:true //return course with updated values
-    })
-    .exec()
-    .then(user=>{
-      res.status(200).json({
-         user:user,
-         state:true 
-      })
+    // },{
+    //   new:true //return course with updated values
+    // })
+    // .exec()
+    // .then(user=>{
+    //   res.status(200).json({
+    //      user:user,
+    //      state:true 
+    //   })
      
    
-    })
-    .catch(err=>{
-      res.status(500).json({
-        state:false,
-        error:err
-    })
-    })
+    // })
+    // .catch(err=>{
+    //   res.status(500).json({
+    //     state:false,
+    //     error:err
+    // })
+    // })
     
 });
 
