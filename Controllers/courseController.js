@@ -76,6 +76,36 @@ function checkUserAlreadyRegisterd(req,res,next){
 
 }
 
+//check user already rate to particular courese or not
+
+function checkUserAlreadyRate(req,res,next){
+const userId=req.body.userId;
+const courseId=req.body.courseId;
+console.log("Ddddddddddd")
+ContentSchema
+  .find({_id:courseId,ratedUser:userId})
+  .then(course=>{
+    console.log(course.length)
+      if(course.length!=0){
+          res.send("User Already rated ")
+      }
+      else{
+        console.log("iiiiii")
+         
+         next(); 
+      }
+  })
+  .catch(err=>{
+      console.log("OOOOOOOOOO")
+      res.status(500).json({
+          state:false
+      })
+  })
+
+
+
+}
+
 
 function storeCourse(req,res,next){
   
@@ -117,13 +147,6 @@ imageSecureURL="";
 
 } 
 
-
-    const content=new ContentSchema({
-        _id:new mongoose.Types.ObjectId(),
-        name:req.body.contentName,
-        url:req.body.contentUrl
-    });
-
     const course=new CourseSchema({
         name:req.body.name,
         author:req.body.author,
@@ -138,14 +161,14 @@ imageSecureURL="";
         courseImg:imageSecureURL,
         //************** */
 
-        content1:req.body.content1,
-        content2:req.body.content2,
-        content3:req.body.content3,
+        topic:req.body.topic,
+        file:req.body.file,
+        videoId:req.body.videoId,
       //************* */
     
         
     });
-    content.save()
+    
     return course.save();
 
 
@@ -155,5 +178,6 @@ imageSecureURL="";
 
 module.exports={
     checkUserAlreadyRegisterd:checkUserAlreadyRegisterd,
-    storeCourse:storeCourse
+    storeCourse:storeCourse,
+    checkUserAlreadyRate:checkUserAlreadyRate
 }

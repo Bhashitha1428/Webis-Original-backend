@@ -168,7 +168,7 @@ router.get('/allUserDetails',(req,res)=>{
 
 
 })
-//
+
 
 
 
@@ -210,12 +210,56 @@ router.get('/findByRole/:role', (req, res, next) => {
             });
         });
 })
+////get all content providers
+router.get('/contentProviders', (req, res, next) => {
+    console.log("get All contentProvider user route") ;
+    User
+       .find({role:"contentProvider"})
+       .exec()
+       .then(users=>{
+         
+           res.status(200).json({
+               contentProviders:users,
+               state:true
+           })
+       })
+       .catch(err=>{
+           res.status(500).json({
+               error:err,
+               state:false
+           })
+       })
+   
+})
+
+////get all Admin users
+router.get('/admins', (req, res, next) => {
+  console.log("get All admin user route") ;
+    User
+       .find({role:"admin"})
+       .exec()
+       .then(users=>{
+         
+           res.status(200).json({
+               Admins:users,
+               state:true
+           })
+       })
+       .catch(err=>{
+           res.status(500).json({
+               error:err,
+               state:false
+           })
+       })
+   
+})
+
 
 
 
 //get prticular user registered course details by Id
 router.get('/:userId', userController.checkUserIfExist, (req, res, next) => {
-    
+    console.log("get prticular user registered course details route");
     const Id = req.params.userId;
     User
         .findById(Id)

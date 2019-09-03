@@ -24,9 +24,9 @@ const courseSchema= mongoose.Schema({
   
 
   /////*********** */
-  content1:{type:Array},
-  content2:{type:Array},
-  content3:{type:Array},
+  topic:{type:Array},
+  file:{type:Array},
+  videoId:{type:Array},
 
 //************* */
 
@@ -37,18 +37,15 @@ const courseSchema= mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:'user'
 }],
-
-content:[{
+ratedUser:[{
   type:mongoose.Schema.Types.ObjectId,
-  ref:'content'
-}]
+  ref:'user'
+}],
+
+
 });
 
 
-const contentSchema=mongoose.Schema({
-  name:{type:String},
-  url:{type:String}
-})
 
 
 
@@ -58,6 +55,6 @@ const contentSchema=mongoose.Schema({
 
 module.exports={
   course:mongoose.model('course',courseSchema),
-  content:mongoose.model('content',contentSchema)
+
   
 }
