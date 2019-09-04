@@ -81,8 +81,8 @@ function checkUserAlreadyRegisterd(req,res,next){
 function checkUserAlreadyRate(req,res,next){
 const userId=req.body.userId;
 const courseId=req.body.courseId;
-console.log("Ddddddddddd")
-ContentSchema
+//console.log("Ddddddddddd")
+CourseSchema
   .find({_id:courseId,ratedUser:userId})
   .then(course=>{
     console.log(course.length)
@@ -90,15 +90,16 @@ ContentSchema
           res.send("User Already rated ")
       }
       else{
-        console.log("iiiiii")
+       // console.log("iiiiii")
          
          next(); 
       }
   })
   .catch(err=>{
-      console.log("OOOOOOOOOO")
+      //console.log("OOOOOOOOOO")
       res.status(500).json({
-          state:false
+          state:false,
+          
       })
   })
 
@@ -157,7 +158,7 @@ imageSecureURL="";
         skillLevel:req.body.skillLevel,
         permission:false,
 
-        content:content._id,
+        
         courseImg:imageSecureURL,
         //************** */
 

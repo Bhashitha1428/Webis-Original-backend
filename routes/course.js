@@ -424,8 +424,8 @@ courseSchema
 
 
 
-  //register users in particular course
-  router.post('/registerCourse/:id',courseController.checkUserAlreadyRegisterd,(req,res)=>{
+  //register users in particular course courseController.checkUserAlreadyRegisterd
+  router.post('/registerCourse/:id',(req,res)=>{
     console.log("IN  register course route");
     const newuser=req.body.userId;
     const courseId=req.params.id;
@@ -434,7 +434,7 @@ courseSchema
     courseSchema
               .findById(req.params.id)
               .then(course=>{
-              //  console.log(course)
+                console.log(course.name)
                 if(!course){
                   res.status(200).json({
                     state:false,
@@ -521,20 +521,24 @@ router.get('/registerUsers',(req,res)=>{
 })
 
 //rating route
-
-router.post('/rating/:id',(req,res)=>{
+//checkAlreadyRate function use to give only one chance to partcular user for rating
+router.post('/rating/:id',courseController.checkUserAlreadyRate,(req,res)=>{
   console.log("Course rating route");
-  const courseId=req.params.id
+  const courseId=req.body.courseId;
   const value=req.body.star;
   const userId=req.body.userId;
+  console.log(value)
+  console.log(courseId)
   console.log(userId)
 courseSchema
-           .find({_id:courseId})
+           .findOne({_id:courseId})  //can use findById also instead of findOne but cannot use find method
            .then(course=>{
-             console.log(course)
+            // console.log(course.name);
          
-            course.registerUser.push(userId);
+            course.ratedUser.push(userId);
+          
             course.save()
+           // console.log("ASASAS")
             
              
                
@@ -546,43 +550,43 @@ courseSchema
 
 
 
-  // courseSchema
-  //     .findOneAndUpdate({_id:courseId},{
-  //       $inc:{
-  //         stars:value,
-  //         count:1
-  //          },
+  courseSchema
+      .findOneAndUpdate({_id:courseId},{
+        $inc:{
+          stars:value,
+          count:1
+           },
           
-  //         },
-  //         {
-  //           new:true
+          },
+          {
+            new:true
           
-  //         }) 
+          }) 
 
-  //      .exec()   
-  //     .then(result=>{
-  //       if(result){
+       .exec()   
+      .then(result=>{
+        if(result){
          
 
-  //           res.status(200).json({
-  //             state:true,
-  //             stars:result.stars,
-  //             count:result.count,
-  //             rating:(result.stars/result.count)
+            res.status(200).json({
+              state:true,
+              stars:result.stars,
+              count:result.count,
+              rating:(result.stars/result.count)
 
 
-  //           });
-  //       }
-  //   })
-  //   .catch(error => {
-  //       res.status(500).json({
-  //         error: error,
-  //         state :false,
-  //         msg:"course not found or other error"
+            });
+        }
+    })
+    .catch(error => {
+        res.status(500).json({
+          error: error,
+          state :false,
+          msg:"course not found or other error"
         
-  //       });
+        });
         
-  //   });
+    });
 
 
 
