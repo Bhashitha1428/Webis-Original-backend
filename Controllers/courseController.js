@@ -87,7 +87,7 @@ CourseSchema
   .then(course=>{
     console.log(course.length)
       if(course.length!=0){
-          res.send("User Already rated ")
+          res.send("User Already rated.. ")
       }
       else{
        // console.log("iiiiii")
