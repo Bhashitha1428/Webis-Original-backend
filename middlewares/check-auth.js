@@ -49,11 +49,11 @@ function checkIfAdmin(req, res, next) {
      
         //req.userData = decodeJWT;
         if (decodeJWT.user.role === 'Admin'){
-            
+          
             next()
         } else{
             return res.status(200).json({
-                Message: ' Not Permissions'
+                Message: ' Not Permissions, You are not admin user '
             });
         }
     } catch (error) {

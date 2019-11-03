@@ -56,6 +56,7 @@ function getUserById (id, callback){
 
     /* user register*/
     function registerUser(req, res,next){
+        console.log("AAAAAAAAAA")
     User
     .find({ email: req.body.email })
     .exec()

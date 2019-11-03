@@ -55,7 +55,7 @@ router.post('/uploadUserImage/:userId', uploadController.userImageUpload.single(
 
 //Authenticate(Login)
 router.post('/authenticate', (req, res, next)=> {
-    console.log("ooooo");
+    console.log("User Authenticate/Login route");
     const email= req.body.email;
     const password = req.body.password;
     console.log(email);
@@ -283,28 +283,33 @@ router.get('/:userId', userController.checkUserIfExist, (req, res, next) => {
 
 //edit user account details with password***
 //check password of a loged user before edit his profile and Edit user profile
-router.post('/editUserProfile/:userId', (req, res, next) => {
+router.put('/editUserProfile/:userId', (req, res, next) => {
+    console.log("User profile edit route");
     const userId = req.params.userId;
     const currentPassword = req.body.password;
+    console.log(currentPassword);
     // const thispassword;
     User
         .findById(userId)
         .exec()
         .then(user => {
+            console.log(user);
             savedPassword = user.password;
-            bcrypt.compare(currentPassword, savedPassword, (err, result) => {
+            console.log(savedPassword);
+            bcrypt.compare(currentPassword,savedPassword, (err, result) => {
                 if(result){
-                         
+                        // console.log("LLLLLLLL")
                     bcrypt.hash(req.body.newPassword, 10, (err, hash) => {
                         if(err){
                             return res.status(500).json({     
                             });
                         }else {
-                                
+                            
+                          //  console.log("KKKKKKKKK");
                             User.update({_id:userId},{
                                 $set:{
-                                   fname: req.body.fname ,
-                                   lname:req.body.lname , 
+                                //    fname: req.body.fname ,
+                                //    lname:req.body.lname , 
                                    password:hash 
                                 }
                             })
@@ -329,8 +334,12 @@ router.post('/editUserProfile/:userId', (req, res, next) => {
 
                    
                  else {
+                   // console.log("PPPPPPPPP");
                     res.status(500).json({
-                        state: false
+                        state: false,
+                        msg:"incorrect password"
+
+                       
                     })
                 }
             })
@@ -345,7 +354,7 @@ router.post('/editUserProfile/:userId', (req, res, next) => {
 
  
 // edit(update) user Profile without password
-router.put('/update/:id',  (req, res) => {
+router.put('/update/:id', (req, res) => {
     const userId=req.params.id;
     console.log("In userDetails update route");
      User
@@ -354,9 +363,10 @@ router.put('/update/:id',  (req, res) => {
             $set:{
                 fname:req.body.fname,
                 lname:req.body.lname
-            }  
+            }
             
-         })
+         },{new:true})
+        
          .then(result=>{
              if(result){
                  res.json({
@@ -372,21 +382,13 @@ router.put('/update/:id',  (req, res) => {
              });
          })
 
-       
 
 
-
-
-
-    // const c= await User.findByIdAndUpdate(req.params.id, {
+    // const c= await User.findOneAndUpdate({_id:req.params.id}, {
     //      fname: req.body.fname ,
     //      lname:req.body.lname ,
-    //      email:req.body.email,
+    //     // email:req.body.email,
          
-
-
-
-    
     // },{
     //   new:true //return course with updated values
     // })
@@ -409,7 +411,7 @@ router.put('/update/:id',  (req, res) => {
 });
 
 
-//delete user by Id
+//delete user by Id and by **** admin
 router.delete('/delete/:id',checkAuth.checkIfAdmin,userController.checkUserIfExist,(req,res)=>{
     console.log(" In user delete Route");
   const userId=req.params.id;
@@ -451,6 +453,50 @@ router.delete('/delete/:id',checkAuth.checkIfAdmin,userController.checkUserIfExi
   
   
   })
+
+
+  //delete(remove) user account by himself
+
+  router.delete('/remove/:id',(req,res)=>{
+    const userId=req.params.id;
+  
+    User
+          .findById(userId)
+          .then(user=>{
+            console.log(user)
+          
+               if(!user){
+                res.status(500).json({
+                   Message:"User is not found" ,
+                   state:false
+                  
+                 })
+                 }
+                  else{
+                  
+                          User
+                               .deleteOne({_id:userId})
+                               .then(du=>{
+                                res.status(200).json({
+                                  user:user,
+                                  state:true,
+                                  Message:"User was deleted"
+            
+                             })
+                                 }) 
+                 }
+             })
+             .catch(err=>{
+               res.status(500).json({
+                    state:false,
+                    Message:err
+
+               })
+             })
+  })
+
+
+
 
 //send reset password email to user
 router.get('/forgotPassword/:email', (req, res, next) => {
@@ -512,14 +558,16 @@ router.get('/newPassword/:email', (req, res, next) => {
                 emailController.sendNewPassword(userEmail, newPassword);
                     res.status(200).json({
                         state: true,
-                        password: newPassword
+                        password: newPassword,
+                        msg:"Check your emails"
                     })
             }
         })
         .catch(err => {
             res.status(401).json({
                 error: err,
-                state: false
+                state: false,
+                msg:"Not a valid email"
             })
         })
 })

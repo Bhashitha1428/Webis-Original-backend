@@ -137,11 +137,12 @@ function saveCourse(req,res){
         console.log("WWWWWWWWW")
     cloudinary.uploader.upload(req.file.path, function(result) {
            imageSecureURL = result.secure_url;
+           console.log(imageSecureURL);
            
            
     })
 }catch(error ){
-    //console.log("KKKKKKK")
+    console.log("KKKKKKK")
 console.log("Handled error(because image not pass by user) "+error)
 imageSecureURL="";
 
@@ -156,7 +157,7 @@ imageSecureURL="";
         subCatergory:req.body.subCatergory,
         type:req.body.type,
         skillLevel:req.body.skillLevel,
-        permission:false,
+        permission:null,
 
         
         courseImg:imageSecureURL,

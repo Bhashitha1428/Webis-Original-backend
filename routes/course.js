@@ -1,5 +1,6 @@
 const express=require('express');
 const router=express.Router();
+const cloudinary = require('cloudinary');
 const Course=require('../models/course');
 const courseSchema=Course.course;
 
@@ -129,7 +130,9 @@ router.get('/catergory',(req,res)=>{
 const catergoryName=req.body.catergoryName
 console.log(catergoryName)
 courseSchema
-      .find({catergory:catergoryName})
+      .find({
+        $and: [ { catergory:catergoryName } ,{permission:true } ]
+      })
       .exec()
       .then(course=>{
 
@@ -159,7 +162,10 @@ console.log("CCCCCCCCC")
   const subCatergoryName=req.body.subCatergory
   console.log(subCatergoryName);
   courseSchema
-        .find({subCatergory:subCatergoryName})
+      // .find({subCatergory:subCatergoryName})
+        .find({
+          $and: [ { subCatergory:subCatergoryName} ,{permission:true } ]
+        })
         .exec()
         .then(course=>{
   
@@ -184,6 +190,32 @@ console.log("CCCCCCCCC")
 //store course
 router.post('/put',  uploadController.userImageUpload.single('image'),courseController.storeCourse);
 
+
+//course file upload and return url 
+router.post('/put/file',uploadController.userImageUpload.single('file'),(req,res)=>{
+//   cloudinary.uploader.upload(req.file.path, function(result) {
+//     imageSecureURL = result.secure_url;
+//     res.status(200).json({
+//       fileUrl:imageSecureURL,
+//       state:true
+//     })
+
+// })
+
+try{
+  cloudinary.uploader.upload(req.file.path, function(result) {
+  fileUrl= result.secure_url;
+  res.status(200).json({
+    fileUrl:fileUrl,
+    state:true
+  })
+          
+})
+}catch(error ){
+console.log("Handled error"+error)
+} 
+
+})
 
 
 
@@ -243,10 +275,10 @@ router.post('/store',upload.single('courseImg'), (req,res)=>{
 router.put('/update/:id', async (req, res) => {
     console.log("IN course update Route");
     const c= await courseSchema.findByIdAndUpdate(req.params.id, {
-         name: req.body.name ,
+         name: req.body.name,
          author:req.body.author ,
          duration:req.body.duration, 
-         content:req.body.content,
+         
          description:req.body.description
 
     
@@ -329,6 +361,7 @@ router.put('/givePermissionOrNot/:id', async (req, res) => {
   // delete existing course
 
   //[auth,authrole]
+  //checkAuth.checkIfAdmin
   
 router.delete('/delete/:id',checkAuth.checkIfAdmin,(req,res)=>{
   console.log(" In course delete Route");
@@ -425,7 +458,8 @@ courseSchema
 
 
   //register users in particular course courseController.checkUserAlreadyRegisterd
-  router.post('/registerCourse/:id',(req,res)=>{
+  //u need pass courseId,and Authorization header to this controller
+  router.post('/registerCourse/:id',courseController.checkUserAlreadyRegisterd,(req,res)=>{
     console.log("IN  register course route");
     const newuser=req.body.userId;
     const courseId=req.params.id;
@@ -493,17 +527,17 @@ router.get('/registerUsers',(req,res)=>{
    { 
     
     courseSchema.findById(req.body.courseId)
-    .populate("registerUser",'fname -_id')//name-_id means display registeruser name without his id
-     .select('registerUser  name')
+    .populate("registerUser",'fname -_id lname')//name-_id means display registeruser name without his id
+     .select('name')//this name means course name
      .then(result=>{
       
-      res.status(500).json({
+      res.status(200).json({
         course:result,
         state:true
       }) 
         })
         .catch(err=>{
-           res.json(err)
+           res.status(500).json({error:err,state:false})
            
            
         })
@@ -522,14 +556,12 @@ router.get('/registerUsers',(req,res)=>{
 
 //rating route
 //checkAlreadyRate function use to give only one chance to partcular user for rating
-router.post('/rating/:id',courseController.checkUserAlreadyRate,(req,res)=>{
+router.post('/rating',courseController.checkUserAlreadyRate,(req,res)=>{
   console.log("Course rating route");
   const courseId=req.body.courseId;
   const value=req.body.star;
   const userId=req.body.userId;
-  console.log(value)
-  console.log(courseId)
-  console.log(userId)
+ 
 courseSchema
            .findOne({_id:courseId})  //can use findById also instead of findOne but cannot use find method
            .then(course=>{
