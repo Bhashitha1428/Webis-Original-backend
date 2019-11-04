@@ -163,7 +163,7 @@ imageSecureURL="";
         courseImg:imageSecureURL,
         //************** */
 
-        topic:req.body.topic,
+        topic:req.body.topics,
         file:req.body.file,
         videoId:req.body.videoId,
       //************* */
